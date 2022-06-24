@@ -1,8 +1,7 @@
-from app import db, create_app
+from app import db, app
 from app.models import User, Role
 from werkzeug.security import generate_password_hash
 
-app = create_app()
 app.app_context().push()
 db.create_all()
 

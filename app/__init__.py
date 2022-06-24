@@ -11,6 +11,7 @@ load_dotenv()
 db = SQLAlchemy()    
 app = Flask(__name__)
 middleware = FlaskMiddleware(app)
+logger = logging.getLogger(__name__)
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
@@ -21,7 +22,7 @@ login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.init_app(app)
 
-logger = logging.addHandler(AzureLogHandler(
+logger.addHandler(AzureLogHandler(
     connection_string='InstrumentationKey=' + os.getenv('INSTRUMENTATION_KEY'))
 )
 
