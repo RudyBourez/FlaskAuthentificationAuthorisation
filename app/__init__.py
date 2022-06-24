@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_principal import Principal, RoleNeed, Permission
+from flask_principal import Principal, RoleNeed, Permission, UserNeed, identity_loaded
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 import logging
@@ -19,7 +19,8 @@ principals = Principal(app)
 admin_permission = Permission(RoleNeed('Admin'))
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI') 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS') 
 
 db.init_app(app)
     
@@ -45,6 +46,21 @@ def load_user(user_id):
     # since the user_id is just the primary key of our user table, use it in the query for the user
     return User.query.get(int(user_id))
 
+@identity_loaded.connect_via(app)
+def on_identity_loaded(sender, identity):
+    # Set the identity user object
+    identity.user = current_user
+
+    # Add the UserNeed to the identity
+    if hasattr(current_user, 'id'):
+        identity.provides.add(UserNeed(current_user.id))
+
+    # Assuming the User model has a list of roles, update the
+    # identity with the roles that the user provides
+    if hasattr(current_user, 'roles'):
+        for role in current_user.roles:
+            identity.provides.add(RoleNeed(role.name))
+            
 # blueprint for auth routes in our app
 from .auth import auth as auth_blueprint
 app.register_blueprint(auth_blueprint)

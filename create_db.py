@@ -20,8 +20,8 @@ if not User.query.filter(User.email == 'admin@example.com').first():
         password=generate_password_hash('1234'),
         name='Rudy'
     )
-    admin.roles.append("Admin")
-    admin.roles.append('Agent')
+    admin.roles.append(new_admin)
+    admin.roles.append(new_agent)
     db.session.add(admin)
     db.session.commit()
 
@@ -31,7 +31,6 @@ if not User.query.filter(User.email == 'user@example.com').first():
         password=generate_password_hash('123456'),
         name="User"
     )
-    user.roles.append('User')
-    user.roles.append('Agent')
+    user.roles.append(new_user)
     db.session.add(user)
     db.session.commit()

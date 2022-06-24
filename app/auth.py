@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session, current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User
 from flask_login import current_user, login_user, login_required, logout_user
@@ -26,7 +26,7 @@ def login_post():
         return redirect(url_for('auth.login')) # if the user doesn't exist or password is wrong, reload the page
     app.logger.warning("Login successfull")
     login_user(user, remember=remember)
-    identity_changed.send(app._get_current_object(),
+    identity_changed.send(current_app._get_current_object(),
                                   identity=Identity(user.id))
     return redirect(url_for('main.profile'))
 
@@ -58,14 +58,14 @@ def signup_post():
 @auth.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+    return render_template("dashboard.html", roles=current_user.roles)
 
-# @auth.route('/logout')
-# @login_required
-# def logout():
-#     logout_user()
-#     for key in ('identity.name', 'identity.auth_type'):
-#         session.pop(key, None)
-#     identity_changed.send(app._get_current_object(),
-#                           identity=AnonymousIdentity())
-#     return redirect(url_for('main.index'))
+@auth.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    for key in ('identity.name', 'identity.auth_type'):
+        session.pop(key, None)
+    identity_changed.send(current_app._get_current_object(),
+                          identity=AnonymousIdentity())
+    return redirect(url_for('main.index'))

@@ -32,11 +32,11 @@
                             </a>
                             {% endif %}
                             {% if current_user.is_authenticated %}
-                                {% if current_user.role=="Admin" %}
+                                <!-- {% if "Admin" in current_user.roles %} -->
                                 <a href="{{ url_for('auth.dashboard') }}" class="navbar-item">
                                     Dashboard
                                 </a>
-                                {% endif %}
+                                <!-- {% endif %} -->
                             <a href="{{ url_for('auth.logout') }}" class="navbar-item">
                                 Logout
                             </a>
