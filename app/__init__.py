@@ -21,7 +21,7 @@ login_manager.init_app(app)
 
 logger = logging.getLogger(__name__)
 logger.addHandler(AzureLogHandler(
-    connection_string='InstrumentationKey=c218a293-b622-4866-a256-e89f287c7709;IngestionEndpoint=https://francecentral-1.in.applicationinsights.azure.com/;LiveEndpoint=https://francecentral.livediagnostics.monitor.azure.com/')
+    connection_string='InstrumentationKey=c218a293-b622-4866-a256-e89f287c7709')
 )
 
 from .models import User
