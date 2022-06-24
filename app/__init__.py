@@ -4,6 +4,8 @@ from flask_login import LoginManager
 import logging
 from opencensus.ext.azure.log_exporter import AzureLogHandler
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
+from opencensus.trace import config_integration
+from opencensus.ext.azure import metrics_exporter
 from dotenv import load_dotenv
 import os
 # init SQLAlchemy so we can use it later in our models
@@ -23,8 +25,14 @@ login_manager.login_view = 'auth.login'
 login_manager.init_app(app)
 
 logger.addHandler(AzureLogHandler(
-    connection_string='InstrumentationKey=' + os.getenv('INSTRUMENTATION_KEY'))
+    connection_string = os.getenv('CONNEXION_STRING'))
 )
+logger.setLevel(logging.INFO)
+config_integration.trace_integrations(['sqlalchemy'])
+
+exporter = metrics_exporter.new_metrics_exporter(
+    enable_standard_metrics=False,
+    connection_string=os.getenv('CONNEXION_STRING'))
 
 from .models import User
 
