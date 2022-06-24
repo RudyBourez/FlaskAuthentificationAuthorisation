@@ -3,3 +3,7 @@ flask-login
 flask-sqlalchemy
 gunicorn
 python-dotenv
+opencensus
+opencensus-ext-prometheus
+prometheus-client
+opencensus-ext-azure
