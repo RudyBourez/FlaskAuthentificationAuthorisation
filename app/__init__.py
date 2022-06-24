@@ -1,6 +1,7 @@
 from flask import Flask
+from flask_principal import Principal, RoleNeed, Permission
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 import logging
 from opencensus.ext.azure.log_exporter import AzureLogHandler
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
@@ -13,7 +14,9 @@ load_dotenv()
 db = SQLAlchemy()    
 app = Flask(__name__)
 middleware = FlaskMiddleware(app)
-logger = logging.getLogger(__name__)
+principals = Principal(app)
+
+admin_permission = Permission(RoleNeed('Admin'))
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
@@ -24,6 +27,7 @@ login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.init_app(app)
 
+logger = logging.getLogger(__name__)
 logger.addHandler(AzureLogHandler(
     connection_string = "InstrumentationKey="+os.getenv('CONNEXION_STRING'))
 )
@@ -40,6 +44,7 @@ from .models import User
 def load_user(user_id):
     # since the user_id is just the primary key of our user table, use it in the query for the user
     return User.query.get(int(user_id))
+
 # blueprint for auth routes in our app
 from .auth import auth as auth_blueprint
 app.register_blueprint(auth_blueprint)

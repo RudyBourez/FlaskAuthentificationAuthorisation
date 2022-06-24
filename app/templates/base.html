@@ -32,6 +32,11 @@
                             </a>
                             {% endif %}
                             {% if current_user.is_authenticated %}
+                                {% if current_user.role=="Admin" %}
+                                <a href="{{ url_for('auth.dashboard') }}" class="navbar-item">
+                                    Dashboard
+                                </a>
+                                {% endif %}
                             <a href="{{ url_for('auth.logout') }}" class="navbar-item">
                                 Logout
                             </a>

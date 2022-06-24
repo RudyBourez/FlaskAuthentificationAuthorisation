@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User
 from flask_login import current_user, login_user, login_required, logout_user
+from flask_principal import Identity, AnonymousIdentity, identity_changed
 from app import db, app
-import logging
 auth = Blueprint('auth', __name__)
 
 @auth.route('/login')
@@ -26,6 +26,8 @@ def login_post():
         return redirect(url_for('auth.login')) # if the user doesn't exist or password is wrong, reload the page
     app.logger.warning("Login successfull")
     login_user(user, remember=remember)
+    identity_changed.send(app._get_current_object(),
+                                  identity=Identity(user.id))
     return redirect(url_for('main.profile'))
 
 @auth.route('/signup')
@@ -53,8 +55,17 @@ def signup_post():
     db.session.commit()
     return redirect(url_for('auth.login'))
 
-@auth.route('/logout')
+@auth.route('/dashboard')
 @login_required
-def logout():
-    logout_user()
-    return redirect(url_for('main.index'))
+def dashboard():
+    return render_template("dashboard.html")
+
+# @auth.route('/logout')
+# @login_required
+# def logout():
+#     logout_user()
+#     for key in ('identity.name', 'identity.auth_type'):
+#         session.pop(key, None)
+#     identity_changed.send(app._get_current_object(),
+#                           identity=AnonymousIdentity())
+#     return redirect(url_for('main.index'))

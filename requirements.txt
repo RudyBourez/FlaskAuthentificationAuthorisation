@@ -8,3 +8,4 @@ opencensus-ext-prometheus
 prometheus-client
 opencensus-ext-azure
 opencensus-ext-flask
+flask-principal
