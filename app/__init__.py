@@ -25,14 +25,14 @@ login_manager.login_view = 'auth.login'
 login_manager.init_app(app)
 
 logger.addHandler(AzureLogHandler(
-    connection_string = os.getenv('CONNEXION_STRING'))
+    connection_string = os.getenv("InstrumentationKey="+os.getenv('CONNEXION_STRING')))
 )
 logger.setLevel(logging.INFO)
 config_integration.trace_integrations(['sqlalchemy'])
 
 exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=False,
-    connection_string=os.getenv('CONNEXION_STRING'))
+    connection_string="InstrumentationKey="+os.getenv('CONNEXION_STRING'))
 
 from .models import User
 
