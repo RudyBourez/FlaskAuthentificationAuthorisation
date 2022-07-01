@@ -1,8 +1,45 @@
-# import pytest
-# from app import app
-# import os
+from flask_login import logout_user
+import pytest
 
-# def test_app():
-#     assert app.config["SECRET_KEY"] == os.getenv('SECRET_KEY')
-#     assert app.config["SQLALCHEMY_DATABASE_URI"] == os.getenv('SQLALCHEMY_DATABASE_URI')
-#     assert app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] == os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS')
+from app import app
+
+
+@pytest.fixture
+def client():
+    with app.test_client() as client:
+        yield client
+        
+
+def test_index(client):
+	response = client.get('/')
+	assert response.status_code == 200
+ 
+def test_signup(client):
+	response = client.get('/signup')
+	assert response.status_code == 200
+
+def test_profile_without_login(client):
+	response = client.get('/profile')
+	assert response.status_code == 302
+
+def test_login(client):
+    response = client.get('/login')
+    assert response.status_code == 200
+ 
+def test_with_login(client):
+    good_email = 'user@example.com'
+    good_password = '123456'
+    client.post('/login', data={'email' : good_email, 'password' : good_password})
+    response = client.get('/profile')
+    assert response.status_code == 200
+    
+def test_logout_logged_in(client):
+    email = 'user@example.com'
+    password = '123456'
+    client.post('/login', data={'email' : email, 'password' : password})
+    response = client.get('/logout')
+    assert response.status_code == 302
+
+def test_logout_logged_out(client):
+    response = client.get('/logout')
+    assert response.status_code == 302

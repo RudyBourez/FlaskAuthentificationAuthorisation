@@ -9,6 +9,9 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(1000))
     roles = db.relationship('Role', secondary='user_roles')
     
+    def has_roles(self, *args):
+        return set(args).issubset({role.name for role in self.roles})
+        
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer(), primary_key=True)

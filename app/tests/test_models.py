@@ -22,5 +22,10 @@ def my_agent():
     my_agent = Role(name="Agent")
     return my_agent
 
-def test_models(my_user1):
+def test_models(my_user1, my_admin, my_user2, my_agent):
     assert my_user1.name == "Rudy"
+    my_user1.roles.append(my_admin)
+    assert my_user1.has_roles("Admin")
+    my_user2.roles.append(my_agent)
+    assert my_user2.has_roles("Agent")
+    assert my_user2.name == "user"

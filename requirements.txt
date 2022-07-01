@@ -11,3 +11,5 @@ opencensus-ext-flask
 flask-principal
 pytest
 pytest-coverage
+pytest-flask
+selenium
