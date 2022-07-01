@@ -12,4 +12,5 @@ flask-principal
 pytest
 pytest-coverage
 pytest-flask
+webdriver-manager
 selenium
