@@ -31,13 +31,13 @@ jobs:
         run: pip install -r requirements.txt
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
-      # - name: Tests unitaires
-      #   env: 
-      #     CONNEXION_STRING: ${{ secrets.CONNEXION_STRING}}
-      #     SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI}}
-      #     SQLALCHEMY_TRACK_MODIFICATIONS: ${{ secrets.SQLALCHEMY_TRACK_MODIFICATIONS}}
-      #     SECRET_KEY: ${{ secrets.SECRET_KEY}}
-      #   run: pytest --cov=app --cov-report=term-missing --cov-fail-under=60 --pyargs
+      - name: Tests unitaires
+        env: 
+          CONNEXION_STRING: ${{ secrets.CONNEXION_STRING }}
+          SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
+          SQLALCHEMY_TRACK_MODIFICATIONS: ${{ secrets.SQLALCHEMY_TRACK_MODIFICATIONS }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        run: pytest --cov=app --cov-report=term-missing --cov-fail-under=60 --pyargs
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v2
