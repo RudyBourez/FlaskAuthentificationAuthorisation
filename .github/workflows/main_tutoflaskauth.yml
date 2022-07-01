@@ -38,9 +38,7 @@ jobs:
           SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
           SQLALCHEMY_TRACK_MODIFICATIONS: ${{ secrets.SQLALCHEMY_TRACK_MODIFICATIONS }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        run: |
-          python -c 'import os;print(os.environ)'
-          pytest --cov=app --cov-report=term-missing --cov-fail-under=60 --pyargs
+        run: pytest --cov=app --cov-report=term-missing --cov-fail-under=90 --pyargs
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v2
