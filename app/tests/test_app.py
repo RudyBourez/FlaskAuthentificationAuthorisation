@@ -1,4 +1,3 @@
-from flask_login import logout_user
 import pytest
 
 from app import app
