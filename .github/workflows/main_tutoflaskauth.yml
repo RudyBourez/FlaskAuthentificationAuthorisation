@@ -32,7 +32,7 @@ jobs:
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
       - name: Tests
-        run: pytest --cov app --cov-fail-under=60 --pyargs
+        run: pytest --cov=app --cov-report=term-missing --cov-fail-under=60 --pyargs
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v2
